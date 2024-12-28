@@ -18,7 +18,7 @@ partial struct MoveSystem : ISystem
             var moveDirection = math.normalize(targetPosition - localTransform.ValueRO.Position);
             
             localTransform.ValueRW.Rotation = quaternion.LookRotationSafe(moveDirection, math.up());
-            velocity.ValueRW.Linear = moveDirection * moveSpeed.ValueRO.Value;
+            velocity.ValueRW.Linear = moveDirection * moveSpeed.ValueRO.Value * deltaTime;
             velocity.ValueRW.Angular = float3.zero;
         }
     }
