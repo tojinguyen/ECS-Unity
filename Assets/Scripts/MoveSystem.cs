@@ -9,17 +9,23 @@ partial struct MoveSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var deltaTime = SystemAPI.Time.DeltaTime;
+        var unitMoverJob = new UnitMoverJob() { DeltaTime = SystemAPI.Time.DeltaTime };
+        unitMoverJob.ScheduleParallel();
+    }
+}
 
-        foreach (var (localTransform, moveSpeed, velocity) in 
-                 SystemAPI.Query<RefRW<LocalTransform>, RefRO<MoveSpeedCompData>, RefRW<PhysicsVelocity>>())
-        {
-            var targetPosition = localTransform.ValueRO.Position + new float3(10, 0, 0);
-            var moveDirection = math.normalize(targetPosition - localTransform.ValueRO.Position);
+[BurstCompile]
+internal partial struct UnitMoverJob : IJobEntity
+{
+    public float DeltaTime;
+
+    private void Execute(ref LocalTransform localTransform, in MoveSpeedCompData moveSpeed, ref PhysicsVelocity velocity)
+    {
+        var targetPosition = localTransform.Position + new float3(10, 0, 0);
+        var moveDirection = math.normalize(targetPosition - localTransform.Position);
             
-            localTransform.ValueRW.Rotation = quaternion.LookRotationSafe(moveDirection, math.up());
-            velocity.ValueRW.Linear = moveDirection * moveSpeed.ValueRO.Value * deltaTime;
-            velocity.ValueRW.Angular = float3.zero;
-        }
+        localTransform.Rotation = quaternion.LookRotationSafe(moveDirection, math.up());
+        velocity.Linear = moveDirection * moveSpeed.Value * DeltaTime;
+        velocity.Angular = float3.zero;
     }
 }
