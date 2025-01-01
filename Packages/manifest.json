@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.tirex.util": "https://github.com/tojinguyen/Unity-Utilities.git/#1.0.2",
     "com.unity.2d.sprite": "1.0.0",
+    "com.unity.addressables": "2.2.2",
     "com.unity.ai.navigation": "2.0.5",
     "com.unity.bindings.openimageio": "1.0.0",
     "com.unity.burst": "1.8.18",
